@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Tema 10 — Prevención de Riesgos Laborales | Opositar en Valencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --naranja: #d97706; --naranja-claro: #fef3c7; --naranja-borde: #f59e0b;
+    --azul-oscuro: #1e293b; --texto: #374151; --texto-suave: #6b7280;
+    --borde: #e5e7eb; --fondo: #fafaf9; --blanco: #ffffff;
+    --verde: #166534; --verde-bg: #f0fdf4; --verde-borde: #86efac;
+    --rojo: #991b1b; --rojo-bg: #fef2f2; --rojo-borde: #fca5a5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--fondo); color: var(--texto); min-height: 100vh; font-size: 16px; line-height: 1.6; }
+  header { background: var(--blanco); border-bottom: 1px solid var(--borde); }
+  .header-top { max-width: 860px; margin: 0 auto; padding: 1.4rem 1.5rem 1rem; display: flex; align-items: flex-start; gap: 1.2rem; }
+  .header-logo { width: 48px; height: 48px; border-radius: 8px; object-fit: contain; flex-shrink: 0; }
+  .header-textos { flex: 1; }
+  .header-site { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--naranja); font-weight: 600; margin-bottom: 3px; }
+  .header-titulo { font-family: 'Lora', serif; font-size: clamp(1.15rem, 3vw, 1.65rem); font-weight: 700; color: var(--azul-oscuro); line-height: 1.2; }
+  .header-sub { font-size: 0.88rem; color: var(--texto-suave); margin-top: 4px; }
+  .header-meta { background: var(--naranja-claro); border-top: 1px solid #fde68a; padding: 0.55rem 1.5rem; }
+  .header-meta-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 0.83rem; color: #92400e; font-weight: 500; }
+  .barra-wrap { position: sticky; top: 0; z-index: 100; background: var(--blanco); border-bottom: 1px solid var(--borde); padding: 0.6rem 1.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+  .barra-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; }
+  .barra-track { flex: 1; height: 6px; background: #f3f4f6; border-radius: 99px; overflow: hidden; }
+  .barra-fill { height: 100%; background: var(--naranja); border-radius: 99px; transition: width 0.35s ease; width: 0%; }
+  .barra-num { font-size: 13px; font-weight: 600; color: var(--azul-oscuro); white-space: nowrap; min-width: 52px; }
+  .barra-score { font-size: 13px; color: var(--texto-suave); white-space: nowrap; }
+  .barra-score .ok { color: var(--verde); font-weight: 600; }
+  .barra-score .ko { color: var(--rojo); font-weight: 600; }
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+  .card { background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1.4rem; transition: box-shadow 0.2s; }
+  .card:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.06); }
+  .card-num { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--naranja); margin-bottom: 0.5rem; }
+  .card-pregunta { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; line-height: 1.55; color: var(--azul-oscuro); margin-bottom: 1.1rem; }
+  .opciones { display: flex; flex-direction: column; gap: 0.45rem; }
+  .opcion { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.7rem 1rem; border: 1.5px solid var(--borde); border-radius: 7px; cursor: pointer; background: var(--blanco); text-align: left; font-family: 'Source Sans 3', sans-serif; font-size: 0.93rem; color: var(--texto); line-height: 1.5; transition: border-color 0.15s, background 0.15s; width: 100%; }
+  .opcion:hover:not(:disabled) { border-color: var(--naranja-borde); background: var(--naranja-claro); }
+  .opcion .letra { font-weight: 700; color: var(--naranja); min-width: 18px; font-size: 0.85rem; margin-top: 2px; flex-shrink: 0; }
+  .opcion.correcta { border-color: var(--verde-borde); background: var(--verde-bg); color: var(--verde); }
+  .opcion.correcta .letra { color: #15803d; }
+  .opcion.incorrecta { border-color: var(--rojo-borde); background: var(--rojo-bg); color: var(--rojo); }
+  .opcion.incorrecta .letra { color: var(--rojo); }
+  .opcion:disabled { cursor: default; }
+  .explicacion { display: none; margin-top: 1rem; padding: 0.9rem 1rem 0.9rem 1.1rem; background: #fffbeb; border-left: 3px solid var(--naranja); border-radius: 0 6px 6px 0; font-size: 0.875rem; line-height: 1.65; color: var(--texto); }
+  .explicacion.visible { display: block; animation: fadeIn 0.22s ease; }
+  .explicacion strong { color: var(--azul-oscuro); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  .resultado { display: none; background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; padding: 2.5rem 2rem 2rem; margin: 1.5rem 0 2rem; text-align: center; }
+  .resultado.visible { display: block; animation: fadeIn 0.3s ease; }
+  .resultado-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--naranja); font-weight: 600; margin-bottom: 0.5rem; }
+  .resultado h2 { font-family: 'Lora', serif; font-size: 1.75rem; font-weight: 700; color: var(--azul-oscuro); margin-bottom: 0.3rem; }
+  .resultado-nota { font-size: 3.2rem; font-weight: 700; color: var(--azul-oscuro); line-height: 1; margin: 1rem 0 0.3rem; font-family: 'Lora', serif; }
+  .resultado-nota span { color: var(--naranja); }
+  .calif-badge { display: inline-block; padding: 5px 16px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; margin: 0.6rem 0 1.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 0 0 1.5rem; }
+  .stat { background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px; padding: 0.9rem 0.5rem; }
+  .stat-num { font-size: 1.9rem; font-weight: 700; font-family: 'Lora', serif; }
+  .stat-lab { font-size: 0.78rem; color: var(--texto-suave); margin-top: 2px; }
+  .resultado-hint { font-size: 0.85rem; color: var(--texto-suave); margin-bottom: 1.2rem; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.7rem 1.6rem; border-radius: 7px; font-family: 'Source Sans 3', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.18s; }
+  .btn-naranja { background: var(--naranja); color: white; }
+  .btn-naranja:hover { background: #b45309; transform: translateY(-1px); }
+  @media (max-width: 580px) { main { padding: 1.2rem 1rem 4rem; } .card { padding: 1.1rem; } .stats { grid-template-columns: 1fr 1fr; } .header-top { padding: 1rem; gap: 0.8rem; } .header-meta { padding: 0.5rem 1rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <img class="header-logo"
+      src="https://opositorgva.wordpress.com/wp-content/uploads/2024/04/cropped-opositar-en-valencia-logo-sin-fondo.png"
+      alt="Opositar en Valencia" onerror="this.style.display='none'">
+    <div class="header-textos">
+      <div class="header-site">Opositar en Valencia · GVA</div>
+      <div class="header-titulo">Tema 10 — Ley 31/1995, de Prevención de Riesgos Laborales</div>
+      <div class="header-sub">Capítulo I: Objeto, ámbito y definiciones · Capítulo III: Derechos y obligaciones</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="header-meta-inner">
+      <span id="totalLabel">📋 Cargando...</span>
+      <span>🎯 Nivel medio-alto</span>
+      <span>🔀 Orden aleatorio en cada intento</span>
+      <span>✅ Explicación en cada respuesta</span>
+    </div>
+  </div>
+</header>
+
+<div class="barra-wrap">
+  <div class="barra-inner">
+    <div class="barra-track"><div class="barra-fill" id="barraFill"></div></div>
+    <span class="barra-num" id="barraNum">0 / ?</span>
+    <span class="barra-score"><span class="ok" id="scoreOk">✓ 0</span> &nbsp;<span class="ko" id="scoreKo">✗ 0</span></span>
+  </div>
+</div>
+
+<main id="mainContent"></main>
+
+<script>
+const BANCO = [
+
+  /* ══ CAPÍTULO I — OBJETO, ÁMBITO Y DEFINICIONES ══ */
+  {
+    p: "¿Cuál es el objeto de la Ley 31/1995 de Prevención de Riesgos Laborales según su artículo 2.1?",
+    ops: [
+      "Regular el régimen sancionador aplicable a los empresarios incumplidores en materia de seguridad laboral",
+      "Promover la seguridad y la salud de los trabajadores mediante la aplicación de medidas y el desarrollo de las actividades necesarias para la prevención de riesgos derivados del trabajo",
+      "Establecer un sistema único de Mutuas de Accidentes de Trabajo y Enfermedades Profesionales",
+      "Crear el Instituto Nacional de Seguridad y Salud en el Trabajo como organismo regulador"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 2.1 LPRL establece que la Ley «tiene por objeto promover la seguridad y la salud de los trabajadores mediante la aplicación de medidas y el desarrollo de las actividades necesarias para la prevención de riesgos derivados del trabajo». A tal efecto, establece principios generales sobre protección, eliminación de riesgos, información, consulta, participación y formación."
+  },
+  {
+    p: "Según el artículo 2.2 de la LPRL, ¿qué carácter tienen las disposiciones laborales de esta Ley y sus normas reglamentarias?",
+    ops: [
+      "Carácter de Derecho dispositivo, modificable libremente por acuerdo entre las partes",
+      "Carácter de Derecho necesario mínimo indisponible, pudiendo ser mejoradas y desarrolladas en los convenios colectivos",
+      "Carácter de Derecho supletorio, aplicable solo en defecto de convenio colectivo",
+      "Carácter de Derecho necesario absoluto, no modificable ni siquiera por convenio colectivo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 2.2 LPRL establece que las disposiciones laborales de la Ley «tendrán en todo caso el carácter de Derecho necesario mínimo indisponible, pudiendo ser mejoradas y desarrolladas en los convenios colectivos». Es decir, fijan un suelo de protección que no puede rebajarse, pero sí mejorarse mediante negociación colectiva."
+  },
+  {
+    p: "El artículo 3.1 de la LPRL establece el ámbito de aplicación de la Ley. ¿A qué tipos de relaciones se aplica?",
+    ops: [
+      "Exclusivamente a las relaciones laborales reguladas en el Estatuto de los Trabajadores",
+      "A las relaciones laborales del Estatuto de los Trabajadores y a las relaciones de carácter administrativo o estatutario del personal al servicio de las Administraciones Públicas, con las peculiaridades que se contemplen",
+      "Solo a las relaciones laborales del sector privado, quedando excluido el empleo público",
+      "Únicamente a las relaciones estatutarias del personal sanitario y a las laborales del sector privado"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.1 LPRL establece que la Ley «será de aplicación tanto en el ámbito de las relaciones laborales reguladas en el texto refundido de la Ley del Estatuto de los Trabajadores, como en el de las relaciones de carácter administrativo o estatutario del personal al servicio de las Administraciones Públicas, con las peculiaridades que, en este caso, se contemplan en la presente Ley»."
+  },
+  {
+    p: "¿Es de aplicación la LPRL a las sociedades cooperativas, según el artículo 3.1?",
+    ops: [
+      "No, las cooperativas quedan excluidas por su régimen jurídico especial",
+      "Sí, en las que existan socios cuya actividad consista en la prestación de un trabajo personal, con las peculiaridades de su normativa específica",
+      "Sí, pero solo respecto a sus trabajadores asalariados, nunca respecto a los socios trabajadores",
+      "Solo es aplicable a las cooperativas de trabajo asociado de más de 50 socios"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.1 LPRL extiende su aplicación «a las sociedades cooperativas, constituidas de acuerdo con la legislación que les sea de aplicación, en las que existan socios cuya actividad consista en la prestación de un trabajo personal, con las peculiaridades derivadas de su normativa específica»."
+  },
+  {
+    p: "El artículo 3.2 de la LPRL excluye determinadas actividades de funciones públicas. ¿Cuál de las siguientes SÍ está excluida del ámbito de aplicación de la Ley?",
+    ops: [
+      "Los servicios sanitarios públicos en general",
+      "Policía, seguridad y resguardo aduanero",
+      "El personal docente de centros públicos de enseñanza",
+      "El personal administrativo de las Administraciones Públicas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.2 LPRL excluye, cuando las particularidades de la actividad lo impidan: policía, seguridad y resguardo aduanero; servicios operativos de protección civil y peritaje forense en casos de grave riesgo, catástrofe y calamidad pública; y Fuerzas Armadas y actividades militares de la Guardia Civil. No obstante, la Ley «inspirará la normativa específica» que se dicte para estas actividades."
+  },
+  {
+    p: "¿Qué tres ámbitos de funciones públicas excluye expresamente el artículo 3.2 de la LPRL?",
+    ops: [
+      "Policía y seguridad; servicios operativos de protección civil y peritaje forense en grave riesgo, catástrofe y calamidad pública; Fuerzas Armadas y actividades militares de la Guardia Civil",
+      "Policía y seguridad; instituciones penitenciarias; servicios de inteligencia del Estado",
+      "Fuerzas Armadas; servicios diplomáticos; Cuerpo Nacional de Policía",
+      "Resguardo aduanero; servicios de emergencia sanitaria; bomberos forestales"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 3.2 LPRL enumera exactamente tres ámbitos excluidos: «Policía, seguridad y resguardo aduanero»; «Servicios operativos de protección civil y peritaje forense en los casos de grave riesgo, catástrofe y calamidad pública»; y «Fuerzas Armadas y actividades militares de la Guardia Civil». Estas exclusiones operan solo «en aquellas actividades cuyas particularidades lo impidan»."
+  },
+  {
+    p: "Según el artículo 3.3 de la LPRL, ¿es aplicable la Ley a los centros y establecimientos militares?",
+    ops: [
+      "No, los centros militares quedan totalmente excluidos del ámbito de la Ley",
+      "Sí, con las particularidades previstas en su normativa específica",
+      "Sí, pero solo respecto al personal civil que preste servicios en dichos centros",
+      "Solo es aplicable previa autorización del Ministerio de Defensa caso por caso"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.3 LPRL establece que «en los centros y establecimientos militares será de aplicación lo dispuesto en la presente Ley, con las particularidades previstas en su normativa específica». A diferencia de las actividades militares strictu sensu del art. 3.2, los centros y establecimientos militares sí quedan dentro del ámbito de la Ley, con adaptaciones."
+  },
+  {
+    p: "¿Cómo se adapta la LPRL a los establecimientos penitenciarios, según el artículo 3.3?",
+    ops: [
+      "Quedan totalmente excluidos de la aplicación de la Ley por su régimen especial",
+      "Se adaptarán aquellas actividades cuyas características justifiquen una regulación especial, conforme a la Ley 7/1990 sobre negociación colectiva de empleados públicos",
+      "Se les aplica directamente sin ninguna adaptación ni particularidad",
+      "Solo se aplica al personal funcionario, no al personal laboral de prisiones"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.3 LPRL establece que «en los establecimientos penitenciarios, se adaptarán a la presente Ley aquellas actividades cuyas características justifiquen una regulación especial, lo que se llevará a efecto en los términos señalados en la Ley 7/1990, de 19 de julio, sobre negociación colectiva y participación en la determinación de las condiciones de trabajo de los empleados públicos»."
+  },
+  {
+    p: "El artículo 4.1º de la LPRL define el término «prevención». ¿Cuál es esa definición?",
+    ops: [
+      "El conjunto de actividades o medidas adoptadas o previstas en todas las fases de actividad de la empresa con el fin de evitar o disminuir los riesgos derivados del trabajo",
+      "La eliminación absoluta de todos los riesgos existentes en el centro de trabajo",
+      "El conjunto de sanciones aplicables a los empresarios incumplidores de la normativa preventiva",
+      "Las medidas de primeros auxilios y asistencia médica de urgencia en el entorno laboral"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 4.1º LPRL define «prevención» como «el conjunto de actividades o medidas adoptadas o previstas en todas las fases de actividad de la empresa con el fin de evitar o disminuir los riesgos derivados del trabajo». Es una definición amplia: abarca toda la vida de la empresa, no solo el momento de producirse el riesgo."
+  },
+  {
+    p: "Según el artículo 4.2º de la LPRL, ¿qué factores se valoran conjuntamente para calificar un riesgo laboral desde el punto de vista de su gravedad?",
+    ops: [
+      "La frecuencia con que se repite la actividad y el número de trabajadores expuestos",
+      "La probabilidad de que se produzca el daño y la severidad del mismo",
+      "El coste económico del daño y la duración de la incapacidad laboral resultante",
+      "La antigüedad del trabajador en el puesto y su nivel de formación específica"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 4.2º LPRL define «riesgo laboral» como «la posibilidad de que un trabajador sufra un determinado daño derivado del trabajo» y añade que, «para calificar un riesgo desde el punto de vista de su gravedad, se valorarán conjuntamente la probabilidad de que se produzca el daño y la severidad del mismo». Es la fórmula clásica de evaluación de riesgos: probabilidad × severidad."
+  },
+  {
+    p: "¿Cómo define el artículo 4.3º de la LPRL los «daños derivados del trabajo»?",
+    ops: [
+      "Exclusivamente los accidentes de trabajo que produzcan incapacidad temporal o permanente",
+      "Las enfermedades, patologías o lesiones sufridas con motivo u ocasión del trabajo",
+      "Los daños materiales causados a equipos e instalaciones de la empresa por negligencia del trabajador",
+      "Las pérdidas económicas sufridas por el empresario a consecuencia de un accidente laboral"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 4.3º LPRL define «daños derivados del trabajo» como «las enfermedades, patologías o lesiones sufridas con motivo u ocasión del trabajo». La definición es amplia: incluye tanto enfermedades como patologías y lesiones, sin distinguir su origen (accidente súbito o exposición prolongada)."
+  },
+  {
+    p: "El artículo 4.4º de la LPRL define el «riesgo laboral grave e inminente». ¿Qué elemento temporal exige dicha definición?",
+    ops: [
+      "Que el riesgo ya se haya materializado parcialmente en el pasado reciente",
+      "Que resulte probable racionalmente que se materialice en un futuro inmediato y pueda suponer un daño grave para la salud",
+      "Que el riesgo se repita de forma cíclica cada determinado período de tiempo",
+      "Que el riesgo afecte simultáneamente a más de cinco trabajadores del centro"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 4.4º LPRL define el riesgo grave e inminente como «aquel que resulte probable racionalmente que se materialice en un futuro inmediato y pueda suponer un daño grave para la salud de los trabajadores». La probabilidad racional y la inmediatez temporal son los dos elementos definitorios."
+  },
+  {
+    p: "El artículo 4.4º de la LPRL contempla un supuesto específico de riesgo grave e inminente en caso de exposición a agentes peligrosos. ¿Cuál es la particularidad de este supuesto?",
+    ops: [
+      "Se considera riesgo grave e inminente aunque los daños no se manifiesten de forma inmediata, si es probable racionalmente que se materialice en un futuro inmediato una exposición de la que puedan derivarse daños graves",
+      "Solo se considera grave e inminente si el daño se manifiesta dentro de las 24 horas siguientes a la exposición",
+      "Se excluye de la calificación de grave e inminente cualquier exposición cuyos efectos sean acumulativos a largo plazo",
+      "Requiere que al menos tres trabajadores hayan sido diagnosticados previamente con patologías similares"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 4.4º LPRL establece que, en exposición a agentes susceptibles de causar daños graves, existe riesgo grave e inminente cuando sea probable racionalmente que se materialice en un futuro inmediato una exposición de la que puedan derivarse daños graves, «aun cuando éstos no se manifiesten de forma inmediata». Esto cubre exposiciones a sustancias cuyos efectos son acumulativos o de aparición diferida (p.ej. cancerígenos)."
+  },
+  {
+    p: "¿Cómo define el artículo 4.5º de la LPRL los procesos, actividades, operaciones, equipos o productos «potencialmente peligrosos»?",
+    ops: [
+      "Aquellos que han causado al menos un accidente de trabajo grave en el último año",
+      "Aquellos que, en ausencia de medidas preventivas específicas, originen riesgos para la seguridad y la salud de los trabajadores que los desarrollan o utilizan",
+      "Aquellos sometidos a autorización administrativa previa por la autoridad laboral competente",
+      "Aquellos clasificados como tales en el Reglamento de los Servicios de Prevención"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 4.5º LPRL define como «potencialmente peligrosos» aquellos procesos, actividades, operaciones, equipos o productos «que, en ausencia de medidas preventivas específicas, originen riesgos para la seguridad y la salud de los trabajadores que los desarrollan o utilizan». La clave está en el condicional: el peligro se manifiesta «en ausencia» de medidas preventivas."
+  },
+  {
+    p: "El artículo 4.7º de la LPRL define «condición de trabajo» e incluye específicamente cuatro elementos. ¿Cuál de los siguientes NO figura entre ellos?",
+    ops: [
+      "Las características generales de los locales, instalaciones, equipos, productos y demás útiles del centro de trabajo",
+      "La naturaleza de los agentes físicos, químicos y biológicos presentes y sus intensidades, concentraciones o niveles",
+      "Los procedimientos para la utilización de dichos agentes que influyan en la generación de riesgos",
+      "El salario percibido por el trabajador y su régimen de jornada laboral"
+    ],
+    c: 3,
+    exp: "<strong>Respuesta correcta: D.</strong> El art. 4.7º LPRL incluye específicamente: a) características de locales, instalaciones, equipos y útiles; b) naturaleza de agentes físicos, químicos y biológicos; c) procedimientos de utilización de dichos agentes; d) otras características del trabajo, incluida su organización y ordenación, que influyan en la magnitud de los riesgos. El salario y la jornada no son condiciones de trabajo a efectos de esta Ley, sino aspectos contractuales generales."
+  },
+  {
+    p: "¿Qué se entiende por «equipo de trabajo» según el artículo 4.6º de la LPRL?",
+    ops: [
+      "Cualquier máquina, aparato, instrumento o instalación utilizada en el trabajo",
+      "El conjunto de trabajadores que desarrollan conjuntamente una misma tarea o función",
+      "Los equipos de protección individual proporcionados por el empresario al trabajador",
+      "El conjunto de herramientas de propiedad personal que el trabajador aporta voluntariamente"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 4.6º LPRL define «equipo de trabajo» como «cualquier máquina, aparato, instrumento o instalación utilizada en el trabajo». Es una definición muy amplia que engloba desde una simple herramienta manual hasta una instalación industrial compleja."
+  },
+  {
+    p: "¿Cómo define el artículo 4.8º de la LPRL el «equipo de protección individual»?",
+    ops: [
+      "Cualquier equipo destinado a ser llevado o sujetado por el trabajador para que le proteja de uno o varios riesgos que puedan amenazar su seguridad o salud, incluyendo complementos o accesorios destinados a tal fin",
+      "Cualquier dispositivo de seguridad colectiva instalado de forma fija en el centro de trabajo",
+      "El uniforme reglamentario que el trabajador debe vestir durante su jornada laboral",
+      "Cualquier sistema de alarma o detección automática de riesgos en la empresa"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 4.8º LPRL define el equipo de protección individual (EPI) como «cualquier equipo destinado a ser llevado o sujetado por el trabajador para que le proteja de uno o varios riesgos que puedan amenazar su seguridad o su salud en el trabajo, así como cualquier complemento o accesorio destinado a tal fin». La clave diferenciadora respecto a la protección colectiva es que se lleva o sujeta individualmente."
+  },
+
+  /* ══ CAPÍTULO III — DERECHOS Y OBLIGACIONES ══ */
+  {
+    p: "El artículo 14.1 de la LPRL reconoce el derecho de los trabajadores a una protección eficaz. ¿Qué deber correlativo genera dicho derecho en el empresario?",
+    ops: [
+      "Un deber de indemnización automática ante cualquier accidente laboral, con independencia de su causa",
+      "Un correlativo deber del empresario de protección de los trabajadores frente a los riesgos laborales",
+      "Un deber de suscribir un seguro obligatorio de responsabilidad civil por cada trabajador contratado",
+      "Un deber de formación anual certificada por un organismo público homologado"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 14.1 LPRL establece que «los trabajadores tienen derecho a una protección eficaz en materia de seguridad y salud en el trabajo» y que «el citado derecho supone la existencia de un correlativo deber del empresario de protección de los trabajadores frente a los riesgos laborales». El mismo artículo añade que este deber de protección también vincula a las Administraciones públicas respecto de su personal."
+  },
+  {
+    p: "¿Qué derechos forman parte, según el artículo 14.1 de la LPRL, del derecho de los trabajadores a una protección eficaz?",
+    ops: [
+      "Solo el derecho a recibir formación teórica en materia preventiva al inicio de la relación laboral",
+      "Los derechos de información, consulta y participación, formación en materia preventiva, paralización de la actividad en caso de riesgo grave e inminente y vigilancia de su estado de salud",
+      "Únicamente el derecho a interrumpir la actividad ante cualquier situación de incomodidad laboral",
+      "Solo el derecho a la vigilancia periódica obligatoria de su estado de salud, con independencia de su voluntad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 14.1 in fine LPRL enumera los derechos que integran el derecho a una protección eficaz: «los derechos de información, consulta y participación, formación en materia preventiva, paralización de la actividad en caso de riesgo grave e inminente y vigilancia de su estado de salud, en los términos previstos en la presente Ley». Son cinco derechos instrumentales del derecho general de protección."
+  },
+  {
+    p: "Según el artículo 14.2 de la LPRL, ¿mediante qué mecanismo principal debe el empresario garantizar la seguridad y salud de los trabajadores?",
+    ops: [
+      "Mediante la contratación obligatoria de un servicio de prevención ajeno en todos los casos",
+      "Mediante la integración de la actividad preventiva en la empresa y la adopción de cuantas medidas sean necesarias para la protección de la seguridad y la salud de los trabajadores",
+      "Mediante la suscripción de pólizas de seguro privadas que cubran cualquier eventualidad laboral",
+      "Mediante la reducción de la jornada laboral en actividades calificadas de riesgo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 14.2 LPRL establece que «el empresario realizará la prevención de los riesgos laborales mediante la integración de la actividad preventiva en la empresa y la adopción de cuantas medidas sean necesarias para la protección de la seguridad y la salud de los trabajadores», con las especialidades en materia de plan de prevención, evaluación de riesgos, información, formación, emergencias y vigilancia de la salud."
+  },
+  {
+    p: "¿Sobre quién no debe recaer en ningún caso el coste de las medidas relativas a la seguridad y salud en el trabajo, según el artículo 14.5 de la LPRL?",
+    ops: [
+      "Sobre las mutuas colaboradoras con la Seguridad Social",
+      "Sobre los trabajadores",
+      "Sobre la Administración laboral competente en la materia",
+      "Sobre los fabricantes de equipos de trabajo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 14.5 LPRL es tajante: «el coste de las medidas relativas a la seguridad y la salud en el trabajo no deberá recaer en modo alguno sobre los trabajadores». Es el principio de gratuidad de la prevención para el trabajador, que se reitera en otros artículos como el de formación (art. 19) o el de equipos de protección individual."
+  },
+  {
+    p: "Según el artículo 14.4 de la LPRL, ¿el hecho de atribuir funciones de prevención a trabajadores designados o concertar con un servicio de prevención ajeno exime al empresario de su deber de protección?",
+    ops: [
+      "Sí, una vez delegada la función, la responsabilidad pasa íntegramente al trabajador designado o al servicio ajeno",
+      "No, estas medidas complementan la acción del empresario, pero no le eximen del cumplimiento de su deber en esta materia",
+      "Sí, pero únicamente si el servicio de prevención ajeno está debidamente acreditado por la autoridad laboral",
+      "No exime de responsabilidad civil, pero sí de la responsabilidad administrativa derivada de incumplimientos"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 14.4 LPRL establece que la atribución de funciones a trabajadores o servicios de la empresa y el concierto con entidades especializadas «complementarán las acciones del empresario, sin que por ello le eximan del cumplimiento de su deber en esta materia, sin perjuicio de las acciones que pueda ejercitar, en su caso, contra cualquier otra persona». La responsabilidad última del empresario es indelegable."
+  },
+  {
+    p: "El artículo 15.1 de la LPRL enumera los principios de la acción preventiva. ¿Cuál de los siguientes principios figura expresamente entre ellos?",
+    ops: [
+      "Adaptar el trabajo a la persona, en particular en lo que respecta a la concepción de los puestos de trabajo, así como a la elección de equipos y métodos",
+      "Priorizar siempre la protección individual frente a la colectiva por motivos de eficiencia económica",
+      "Sustituir lo peligroso únicamente cuando exista obligación legal expresa de hacerlo",
+      "Evaluar todos los riesgos, evitables o no, antes de proceder a su eliminación"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 15.1.d) LPRL incluye expresamente entre los principios de la acción preventiva «adaptar el trabajo a la persona, en particular en lo que respecta a la concepción de los puestos de trabajo, así como a la elección de los equipos y los métodos de trabajo y de producción, con miras, en particular, a atenuar el trabajo monótono y repetitivo y a reducir los efectos del mismo en la salud»."
+  },
+  {
+    p: "¿Cuál es el orden de prioridad que establece el artículo 15.1 de la LPRL entre evitar y evaluar los riesgos?",
+    ops: [
+      "Primero evaluar todos los riesgos existentes y después decidir cuáles evitar",
+      "Primero evitar los riesgos (apartado a) y, solo los que no se puedan evitar, evaluarlos (apartado b)",
+      "Ambas acciones deben realizarse simultáneamente sin orden de prelación",
+      "Primero combatir los riesgos en su origen y después evitarlos en la medida de lo posible"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 15.1 LPRL ordena los principios de la acción preventiva comenzando por: a) «Evitar los riesgos»; b) «Evaluar los riesgos que no se puedan evitar». La jerarquía es clara: la evitación total del riesgo es preferente; solo cuando no sea posible evitarlo, se procede a su evaluación y posterior gestión."
+  },
+  {
+    p: "Según el artículo 15.1.h) de la LPRL, ¿qué tipo de protección debe anteponerse a la otra?",
+    ops: [
+      "La protección individual debe anteponerse siempre a la colectiva por su mayor eficacia personalizada",
+      "Deben adoptarse medidas que antepongan la protección colectiva a la individual",
+      "No existe orden de prelación entre protección colectiva e individual en la Ley",
+      "La elección entre protección colectiva e individual queda a criterio exclusivo del trabajador"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 15.1.h) LPRL establece como principio de la acción preventiva «adoptar medidas que antepongan la protección colectiva a la individual». Esto es coherente con el art. 17.2, que dispone que los EPI se utilizarán cuando los riesgos no puedan evitarse o limitarse suficientemente por medios de protección colectiva."
+  },
+  {
+    p: "El artículo 15.2 de la LPRL exige al empresario tomar en consideración un factor concreto al encomendar tareas a los trabajadores. ¿Cuál es?",
+    ops: [
+      "La antigüedad del trabajador en la empresa",
+      "Las capacidades profesionales de los trabajadores en materia de seguridad y de salud",
+      "El nivel salarial y la categoría profesional del trabajador",
+      "La afiliación sindical del trabajador en cuestión"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 15.2 LPRL establece que «el empresario tomará en consideración las capacidades profesionales de los trabajadores en materia de seguridad y de salud en el momento de encomendarles las tareas». Es una manifestación del principio de adaptación del trabajo a la persona."
+  },
+  {
+    p: "Según el artículo 15.3 de la LPRL, ¿quiénes pueden acceder a las zonas de riesgo grave y específico de una empresa?",
+    ops: [
+      "Cualquier trabajador con más de un año de antigüedad en la empresa",
+      "Solo los trabajadores que hayan recibido información suficiente y adecuada",
+      "Únicamente el personal técnico de prevención designado por el empresario",
+      "Cualquier trabajador, sin restricción, salvo prohibición expresa de la autoridad laboral"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 15.3 LPRL establece que «el empresario adoptará las medidas necesarias a fin de garantizar que sólo los trabajadores que hayan recibido información suficiente y adecuada puedan acceder a las zonas de riesgo grave y específico». La formación e información previas son requisito de acceso, no una recomendación."
+  },
+  {
+    p: "El artículo 15.4 de la LPRL establece una regla sobre la adopción de medidas preventivas que impliquen riesgos adicionales. ¿Cuál es?",
+    ops: [
+      "Solo podrán adoptarse cuando la magnitud de dichos riesgos adicionales sea sustancialmente inferior a la de los que se pretende controlar y no existan alternativas más seguras",
+      "Nunca podrán adoptarse medidas preventivas que generen cualquier riesgo adicional, por mínimo que sea",
+      "Podrán adoptarse libremente siempre que el empresario informe previamente al trabajador del riesgo adicional",
+      "Requieren siempre autorización previa de la Inspección de Trabajo y Seguridad Social"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 15.4 LPRL establece que la efectividad de las medidas preventivas debe prever las distracciones o imprudencias no temerarias del trabajador, y que las medidas que impliquen riesgos adicionales «sólo podrán adoptarse cuando la magnitud de dichos riesgos sea sustancialmente inferior a la de los que se pretende controlar y no existan alternativas más seguras»."
+  },
+  {
+    p: "¿Qué establece el artículo 16.1 de la LPRL respecto a la integración de la prevención de riesgos laborales en la empresa?",
+    ops: [
+      "Debe integrarse únicamente en el departamento de recursos humanos de la empresa",
+      "Debe integrarse en el sistema general de gestión de la empresa, en el conjunto de sus actividades y en todos los niveles jerárquicos, mediante un plan de prevención de riesgos laborales",
+      "Debe gestionarse exclusivamente a través de un servicio de prevención ajeno contratado al efecto",
+      "Debe limitarse a las áreas de producción, sin extenderse a las áreas administrativas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.1 LPRL establece que «la prevención de riesgos laborales deberá integrarse en el sistema general de gestión de la empresa, tanto en el conjunto de sus actividades como en todos los niveles jerárquicos de ésta, a través de la implantación y aplicación de un plan de prevención de riesgos laborales»."
+  },
+  {
+    p: "Según el artículo 16.1 de la LPRL, ¿qué debe incluir el plan de prevención de riesgos laborales?",
+    ops: [
+      "Únicamente la relación de equipos de protección individual disponibles en la empresa",
+      "La estructura organizativa, las responsabilidades, las funciones, las prácticas, los procedimientos, los procesos y los recursos necesarios para realizar la acción de prevención en la empresa",
+      "Solo el presupuesto anual destinado a formación en materia preventiva",
+      "Exclusivamente el calendario de revisiones médicas periódicas de los trabajadores"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.1 LPRL establece que el plan de prevención «deberá incluir la estructura organizativa, las responsabilidades, las funciones, las prácticas, los procedimientos, los procesos y los recursos necesarios para realizar la acción de prevención de riesgos en la empresa, en los términos que reglamentariamente se establezcan»."
+  },
+  {
+    p: "¿Cuáles son, según el artículo 16.2 de la LPRL, los instrumentos esenciales para la gestión y aplicación del plan de prevención?",
+    ops: [
+      "El presupuesto de prevención y el calendario laboral",
+      "La evaluación de riesgos laborales y la planificación de la actividad preventiva",
+      "El reglamento interno de la empresa y el convenio colectivo aplicable",
+      "La memoria anual de actividades y el organigrama de la empresa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.2 LPRL establece que «los instrumentos esenciales para la gestión y aplicación del plan de prevención de riesgos, que podrán ser llevados a cabo por fases de forma programada, son la evaluación de riesgos laborales y la planificación de la actividad preventiva»."
+  },
+  {
+    p: "Según el artículo 16.2.a) de la LPRL, ¿cuándo debe actualizarse la evaluación inicial de riesgos?",
+    ops: [
+      "Únicamente cuando lo solicite expresamente la representación legal de los trabajadores",
+      "Cuando cambien las condiciones de trabajo y, en todo caso, se someterá a consideración y se revisará, si fuera necesario, con ocasión de los daños para la salud que se hayan producido",
+      "Solo con periodicidad anual, con independencia de que existan cambios en las condiciones de trabajo",
+      "Exclusivamente al inicio de cada nuevo proceso productivo de la empresa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.2.a) LPRL establece que «la evaluación será actualizada cuando cambien las condiciones de trabajo y, en todo caso, se someterá a consideración y se revisará, si fuera necesario, con ocasión de los daños para la salud que se hayan producido». La evaluación de riesgos no es un acto único, sino un proceso dinámico."
+  },
+  {
+    p: "El artículo 16.2 bis de la LPRL prevé una posibilidad de simplificación del plan de prevención. ¿En qué condiciones?",
+    ops: [
+      "Solo para empresas de menos de 10 trabajadores, sin excepción posible",
+      "En atención al número de trabajadores y a la naturaleza y peligrosidad de las actividades realizadas, siempre que ello no suponga una reducción del nivel de protección de la seguridad y salud de los trabajadores",
+      "Únicamente si la empresa cuenta con un servicio de prevención propio acreditado",
+      "Solo cuando la autoridad laboral lo autorice expresamente caso por caso"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.2 bis LPRL permite que las empresas, «en atención al número de trabajadores y a la naturaleza y peligrosidad de las actividades realizadas, podrán realizar el plan de prevención de riesgos laborales, la evaluación de riesgos y la planificación de la actividad preventiva de forma simplificada, siempre que ello no suponga una reducción del nivel de protección de la seguridad y salud de los trabajadores»."
+  },
+  {
+    p: "¿Cuándo debe el empresario llevar a cabo una investigación según el artículo 16.3 de la LPRL?",
+    ops: [
+      "Únicamente cuando lo exija expresamente la Inspección de Trabajo tras una visita de control",
+      "Cuando se haya producido un daño para la salud de los trabajadores o cuando, con ocasión de la vigilancia de la salud, aparezcan indicios de que las medidas de prevención resultan insuficientes",
+      "Solo cuando el daño producido haya causado el fallecimiento del trabajador afectado",
+      "Cada cinco años, con independencia de que se hayan producido o no daños para la salud"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 16.3 LPRL establece que «cuando se haya producido un daño para la salud de los trabajadores o cuando, con ocasión de la vigilancia de la salud prevista en el artículo 22, aparezcan indicios de que las medidas de prevención resultan insuficientes, el empresario llevará a cabo una investigación al respecto, a fin de detectar las causas de estos hechos»."
+  },
+  {
+    p: "El artículo 17.1 de la LPRL regula los equipos de trabajo. ¿Qué medidas debe adoptar el empresario cuando su utilización presente un riesgo específico?",
+    ops: [
+      "Sustituir obligatoriamente el equipo de trabajo por otro de menor riesgo, sin excepciones",
+      "Reservar la utilización del equipo a los encargados de dicha utilización, y que los trabajos de reparación, transformación, mantenimiento o conservación sean realizados por trabajadores específicamente capacitados",
+      "Prohibir totalmente el uso del equipo hasta que se elimine cualquier riesgo asociado al mismo",
+      "Contratar un seguro específico de responsabilidad civil para cada equipo de trabajo de riesgo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 17.1 LPRL establece que cuando un equipo de trabajo pueda presentar un riesgo específico, el empresario adoptará medidas para que: a) «la utilización del equipo de trabajo quede reservada a los encargados de dicha utilización»; b) «los trabajos de reparación, transformación, mantenimiento o conservación sean realizados por los trabajadores específicamente capacitados para ello»."
+  },
+  {
+    p: "Según el artículo 17.2 de la LPRL, ¿cuándo deben utilizarse los equipos de protección individual (EPI)?",
+    ops: [
+      "Siempre, con independencia de que existan o no medios de protección colectiva disponibles",
+      "Cuando los riesgos no se puedan evitar o no puedan limitarse suficientemente por medios técnicos de protección colectiva o mediante medidas, métodos o procedimientos de organización del trabajo",
+      "Solo cuando lo solicite expresamente el trabajador por motivos de seguridad personal",
+      "Únicamente en las actividades calificadas reglamentariamente como de riesgo grave"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 17.2 LPRL establece que «los equipos de protección individual deberán utilizarse cuando los riesgos no se puedan evitar o no puedan limitarse suficientemente por medios técnicos de protección colectiva o mediante medidas, métodos o procedimientos de organización del trabajo». Es decir, los EPI son el último recurso en la jerarquía de medidas preventivas."
+  },
+  {
+    p: "El artículo 18.1 de la LPRL regula el deber de información a los trabajadores. ¿Cómo se canaliza dicha información en empresas que cuenten con representantes de los trabajadores?",
+    ops: [
+      "Siempre directamente a cada trabajador, sin intervención de los representantes en ningún caso",
+      "A través de los representantes de los trabajadores, si bien deberá informarse directamente a cada trabajador de los riesgos específicos de su puesto y las medidas de protección aplicables",
+      "Exclusivamente a través de los representantes, sin que el trabajador individual tenga derecho a información directa",
+      "Solo mediante carteles informativos colocados en lugares visibles del centro de trabajo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 18.1 LPRL establece que la información general se facilitará «a través de dichos representantes», pero matiza que «deberá informarse directamente a cada trabajador de los riesgos específicos que afecten a su puesto de trabajo o función y de las medidas de protección y prevención aplicables a dichos riesgos». Hay un doble canal: general (vía representantes) y específico (directo)."
+  },
+  {
+    p: "¿Sobre qué tres aspectos debe el empresario informar a los trabajadores, según el artículo 18.1 de la LPRL?",
+    ops: [
+      "Los riesgos para la seguridad y salud, las medidas y actividades de protección y prevención aplicables, y las medidas adoptadas en materia de emergencias (art. 20)",
+      "El salario, la jornada laboral y las condiciones de despido",
+      "Los resultados económicos de la empresa, el organigrama y el régimen disciplinario",
+      "El convenio colectivo aplicable, los días festivos y el calendario laboral"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 18.1 LPRL enumera tres bloques de información: a) «los riesgos para la seguridad y la salud de los trabajadores en el trabajo»; b) «las medidas y actividades de protección y prevención aplicables a los riesgos señalados»; c) «las medidas adoptadas de conformidad con lo dispuesto en el artículo 20» (medidas de emergencia)."
+  },
+  {
+    p: "El artículo 18.2 de la LPRL reconoce el derecho de consulta y participación de los trabajadores. ¿Qué facultad adicional tienen los trabajadores en este ámbito?",
+    ops: [
+      "Solo pueden ser consultados, pero no tienen derecho a presentar propuestas propias",
+      "Tienen derecho a efectuar propuestas al empresario, así como a los órganos de participación y representación, dirigidas a la mejora de los niveles de protección de la seguridad y la salud",
+      "Solo los Delegados de Prevención pueden presentar propuestas, no los trabajadores individualmente",
+      "Las propuestas de los trabajadores requieren ser ratificadas por la autoridad laboral para tener validez"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 18.2 LPRL establece que «los trabajadores tendrán derecho a efectuar propuestas al empresario, así como a los órganos de participación y representación previstos en el capítulo V de esta Ley, dirigidas a la mejora de los niveles de protección de la seguridad y la salud en la empresa»."
+  },
+  {
+    p: "Según el artículo 19.1 de la LPRL, ¿en qué momentos debe el empresario garantizar que el trabajador reciba formación en materia preventiva?",
+    ops: [
+      "Solo en el momento de la contratación, sin necesidad de formación posterior",
+      "En el momento de la contratación, cualquiera que sea la modalidad o duración de ésta, y cuando se produzcan cambios en las funciones o se introduzcan nuevas tecnologías o cambios en los equipos de trabajo",
+      "Únicamente cuando se haya producido un accidente de trabajo previo en el puesto",
+      "Solo cuando lo solicite expresamente el trabajador por escrito"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 19.1 LPRL establece que el empresario debe garantizar formación «tanto en el momento de su contratación, cualquiera que sea la modalidad o duración de ésta, como cuando se produzcan cambios en las funciones que desempeñe o se introduzcan nuevas tecnologías o cambios en los equipos de trabajo». Es una obligación que se reitera ante cualquier cambio relevante."
+  },
+  {
+    p: "¿Quién asume el coste de la formación en materia preventiva, según el artículo 19.2 de la LPRL?",
+    ops: [
+      "Se reparte al 50% entre empresario y trabajador",
+      "El coste no recaerá en ningún caso sobre los trabajadores",
+      "Lo asume íntegramente el trabajador si la formación se imparte fuera de la jornada laboral",
+      "Lo determina el convenio colectivo aplicable en cada sector de actividad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 19.2 LPRL establece que la formación «se podrá impartir por la empresa mediante medios propios o concertándola con servicios ajenos, y su coste no recaerá en ningún caso sobre los trabajadores». Coherente con el principio general de gratuidad del art. 14.5."
+  },
+  {
+    p: "Según el artículo 19.2 de la LPRL, ¿dentro de qué tiempo debe impartirse, siempre que sea posible, la formación preventiva?",
+    ops: [
+      "Fuera de la jornada laboral, sin compensación horaria alguna",
+      "Dentro de la jornada de trabajo o, en su defecto, en otras horas pero con el descuento en aquélla del tiempo invertido",
+      "Únicamente en fines de semana, para no afectar a la producción de la empresa",
+      "Indistintamente dentro o fuera de jornada, según decisión exclusiva del empresario"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 19.2 LPRL establece que la formación «deberá impartirse, siempre que sea posible, dentro de la jornada de trabajo o, en su defecto, en otras horas pero con el descuento en aquélla del tiempo invertido en la misma». Si se imparte fuera de jornada, el tiempo invertido se descuenta de la jornada laboral, evitando que suponga una carga adicional para el trabajador."
+  },
+  {
+    p: "El artículo 20 de la LPRL regula las medidas de emergencia. ¿Qué tres materias debe analizar y prever el empresario?",
+    ops: [
+      "Primeros auxilios, lucha contra incendios y evacuación de los trabajadores",
+      "Seguros de responsabilidad civil, planes de pensiones y bajas laborales",
+      "Vigilancia médica, formación continua y equipos de protección individual",
+      "Coordinación sindical, negociación colectiva y régimen disciplinario"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 20 LPRL establece que el empresario «deberá analizar las posibles situaciones de emergencia y adoptar las medidas necesarias en materia de primeros auxilios, lucha contra incendios y evacuación de los trabajadores», designando personal encargado, con formación adecuada, suficiente en número y con material apropiado."
+  },
+  {
+    p: "Según el artículo 21.1.b) de la LPRL, ¿qué derecho tienen los trabajadores en caso de peligro grave, inminente e inevitable?",
+    ops: [
+      "El derecho a recibir una indemnización inmediata por parte del empresario",
+      "El derecho a interrumpir su actividad y, si fuera necesario, abandonar de inmediato el lugar de trabajo, sin que pueda exigírseles reanudar la actividad mientras persista el peligro, salvo excepción justificada",
+      "El derecho a exigir el cese inmediato del responsable de seguridad de la empresa",
+      "El derecho a solicitar el traslado definitivo a otro centro de trabajo de la empresa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.1.b) LPRL obliga al empresario a adoptar medidas e instrucciones para que «en caso de peligro grave, inminente e inevitable, los trabajadores puedan interrumpir su actividad y, si fuera necesario, abandonar de inmediato el lugar de trabajo», sin que pueda exigírseles reanudar la actividad mientras persista el peligro, «salvo excepción debidamente justificada por razones de seguridad y determinada reglamentariamente»."
+  },
+  {
+    p: "El artículo 21.2 de la LPRL reconoce un derecho individual al trabajador en situaciones de riesgo grave e inminente. ¿Cuál es?",
+    ops: [
+      "El derecho a interrumpir su actividad y abandonar el lugar de trabajo, en caso necesario, cuando considere que dicha actividad entraña un riesgo grave e inminente para su vida o su salud",
+      "El derecho a percibir un complemento salarial por riesgo, con independencia de que abandone o no el puesto",
+      "El derecho a exigir la paralización de la actividad de toda la empresa, no solo de su puesto",
+      "El derecho a solicitar la sustitución inmediata por otro trabajador en su mismo puesto"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 21.2 LPRL reconoce al trabajador, de forma individual y conforme al art. 14.1, «derecho a interrumpir su actividad y abandonar el lugar de trabajo, en caso necesario, cuando considere que dicha actividad entraña un riesgo grave e inminente para su vida o su salud». Es una decisión unilateral del trabajador basada en su propia apreciación del riesgo."
+  },
+  {
+    p: "Según el artículo 21.3 de la LPRL, si el empresario no adopta las medidas necesarias ante un riesgo grave e inminente, ¿quién puede acordar la paralización colectiva de la actividad?",
+    ops: [
+      "El Comité de Empresa, por mayoría simple y sin necesidad de comunicación posterior",
+      "Los representantes legales de los trabajadores, por mayoría de sus miembros, comunicándolo de inmediato a la empresa y a la autoridad laboral",
+      "Cualquier trabajador individual, sin necesidad de respaldo de la representación legal",
+      "Únicamente la Inspección de Trabajo y Seguridad Social, previa denuncia formal"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.3 LPRL establece que «los representantes legales de éstos podrán acordar, por mayoría de sus miembros, la paralización de la actividad de los trabajadores afectados por dicho riesgo», debiendo comunicarse de inmediato a la empresa y a la autoridad laboral, que dispone de 24 horas para anular o ratificar la paralización."
+  },
+  {
+    p: "¿En qué plazo debe pronunciarse la autoridad laboral sobre la paralización de actividad acordada por los representantes de los trabajadores, según el artículo 21.3 de la LPRL?",
+    ops: [
+      "Doce horas",
+      "Veinticuatro horas",
+      "Cuarenta y ocho horas",
+      "Setenta y dos horas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.3 LPRL establece que el acuerdo de paralización «será comunicado de inmediato a la empresa y a la autoridad laboral, la cual, en el plazo de veinticuatro horas, anulará o ratificará la paralización acordada». Es un plazo breve para no prolongar excesivamente la incertidumbre sobre la actividad."
+  },
+  {
+    p: "Cuando no resulte posible reunir con urgencia al órgano de representación del personal (art. 21.3 LPRL), ¿quién puede adoptar el acuerdo de paralización por decisión mayoritaria?",
+    ops: [
+      "El Comité de Seguridad y Salud en pleno",
+      "Los Delegados de Prevención",
+      "El sindicato mayoritario en la empresa",
+      "Cualquier trabajador con más antigüedad en el centro de trabajo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.3 in fine LPRL establece que «el acuerdo... podrá ser adoptado por decisión mayoritaria de los Delegados de Prevención cuando no resulte posible reunir con la urgencia requerida al órgano de representación del personal». Es una alternativa ágil para situaciones de extrema urgencia."
+  },
+  {
+    p: "Según el artículo 21.4 de la LPRL, ¿pueden los trabajadores o sus representantes sufrir perjuicio por haber acordado la interrupción o paralización de la actividad ante un riesgo grave e inminente?",
+    ops: [
+      "Sí, siempre que el empresario considere que el riesgo no era tan grave como se valoró",
+      "No podrán sufrir perjuicio alguno, a menos que hubieran obrado de mala fe o cometido negligencia grave",
+      "Solo pueden sufrir perjuicio económico, nunca disciplinario, con independencia de su buena fe",
+      "Depende de lo que determine el convenio colectivo aplicable en cada caso"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.4 LPRL establece que «los trabajadores o sus representantes no podrán sufrir perjuicio alguno derivado de la adopción de las medidas a que se refieren los apartados anteriores, a menos que hubieran obrado de mala fe o cometido negligencia grave». Es una garantía de indemnidad frente al ejercicio legítimo de estos derechos."
+  },
+  {
+    p: "El artículo 22.1 de la LPRL regula la vigilancia de la salud. ¿Qué carácter tiene, con carácter general?",
+    ops: [
+      "Carácter obligatorio en todo caso, sin posibilidad de oposición del trabajador",
+      "Solo podrá llevarse a cabo cuando el trabajador preste su consentimiento, salvo excepciones tasadas",
+      "Carácter trimestral obligatorio para todos los trabajadores sin excepción",
+      "Carácter voluntario únicamente para el personal directivo de la empresa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.1 LPRL establece que «esta vigilancia sólo podrá llevarse a cabo cuando el trabajador preste su consentimiento». El carácter voluntario es la regla general, con excepciones tasadas que veremos en otra pregunta."
+  },
+  {
+    p: "¿Cuáles son las excepciones al carácter voluntario de la vigilancia de la salud, según el artículo 22.1 de la LPRL?",
+    ops: [
+      "Cuando lo solicite expresamente el empresario por motivos de productividad",
+      "Cuando, previo informe de los representantes de los trabajadores, sea imprescindible para evaluar los efectos de las condiciones de trabajo sobre la salud, para verificar si el estado de salud puede suponer un peligro para el trabajador o terceros, o cuando lo establezca una disposición legal en relación con riesgos específicos de especial peligrosidad",
+      "Cuando el trabajador tenga más de cinco años de antigüedad en el puesto",
+      "Cuando así lo determine unilateralmente el servicio de prevención, sin necesidad de informe previo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.1 LPRL excepciona el carácter voluntario, previo informe de los representantes de los trabajadores, en tres supuestos: cuando los reconocimientos sean imprescindibles para evaluar los efectos de las condiciones de trabajo sobre la salud; para verificar si el estado de salud puede constituir un peligro para el propio trabajador, otros trabajadores u otras personas relacionadas con la empresa; o cuando así lo establezca una disposición legal en relación con riesgos específicos y actividades de especial peligrosidad."
+  },
+  {
+    p: "Según el artículo 22.1 in fine de la LPRL, ¿qué criterio debe seguirse al elegir los reconocimientos o pruebas de vigilancia de la salud?",
+    ops: [
+      "Debe optarse siempre por las pruebas más exhaustivas posibles, con independencia de las molestias",
+      "Debe optarse por la realización de aquellos reconocimientos o pruebas que causen las menores molestias al trabajador y que sean proporcionales al riesgo",
+      "Debe optarse por las pruebas de menor coste económico para la empresa",
+      "La elección corresponde únicamente al servicio médico, sin criterios legales aplicables"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.1 in fine LPRL establece que «en todo caso se deberá optar por la realización de aquellos reconocimientos o pruebas que causen las menores molestias al trabajador y que sean proporcionales al riesgo». Es una aplicación del principio de proporcionalidad al ámbito de la vigilancia médica."
+  },
+  {
+    p: "¿Qué derechos del trabajador deben respetarse siempre en las medidas de vigilancia y control de la salud, según el artículo 22.2 de la LPRL?",
+    ops: [
+      "El derecho a la huelga y a la libre sindicación",
+      "El derecho a la intimidad y a la dignidad de la persona del trabajador y la confidencialidad de toda la información relacionada con su estado de salud",
+      "El derecho a la negociación colectiva y a la representación legal",
+      "El derecho a la formación continua y a la promoción profesional"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.2 LPRL establece que «las medidas de vigilancia y control de la salud de los trabajadores se llevarán a cabo respetando siempre el derecho a la intimidad y a la dignidad de la persona del trabajador y la confidencialidad de toda la información relacionada con su estado de salud»."
+  },
+  {
+    p: "¿Pueden los datos relativos a la vigilancia de la salud de los trabajadores ser usados con fines discriminatorios, según el artículo 22.4 de la LPRL?",
+    ops: [
+      "Sí, siempre que exista justificación objetiva relacionada con el puesto de trabajo",
+      "No, los datos relativos a la vigilancia de la salud no podrán ser usados con fines discriminatorios ni en perjuicio del trabajador",
+      "Sí, pero únicamente para decisiones relacionadas con la promoción profesional",
+      "Depende de lo que establezca el convenio colectivo aplicable en cada empresa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.4 LPRL establece de forma tajante que «los datos relativos a la vigilancia de la salud de los trabajadores no podrán ser usados con fines discriminatorios ni en perjuicio del trabajador»."
+  },
+  {
+    p: "Según el artículo 22.4 de la LPRL, ¿a quién se limita el acceso a la información médica de carácter personal del trabajador?",
+    ops: [
+      "Al empresario y al departamento de recursos humanos de la empresa",
+      "Al personal médico y a las autoridades sanitarias que lleven a cabo la vigilancia de la salud, sin que pueda facilitarse al empresario u otras personas sin consentimiento expreso del trabajador",
+      "A cualquier mando intermedio que tenga responsabilidad directa sobre el trabajador",
+      "A los representantes legales de los trabajadores, en todo caso"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.4 LPRL establece que «el acceso a la información médica de carácter personal se limitará al personal médico y a las autoridades sanitarias que lleven a cabo la vigilancia de la salud de los trabajadores, sin que pueda facilitarse al empresario o a otras personas sin consentimiento expreso del trabajador». Es una garantía esencial de confidencialidad médica."
+  },
+  {
+    p: "Pese a la confidencialidad de los datos médicos, ¿de qué debe ser informado el empresario según el artículo 22.4 in fine de la LPRL?",
+    ops: [
+      "Del diagnóstico médico completo y del historial clínico del trabajador",
+      "De las conclusiones que se deriven de los reconocimientos en relación con la aptitud del trabajador para el puesto o la necesidad de mejorar las medidas de protección y prevención",
+      "Del resultado numérico exacto de todas las pruebas médicas realizadas",
+      "De cualquier enfermedad crónica que padezca el trabajador, sin matización adicional"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.4 in fine LPRL establece que, no obstante la confidencialidad, «el empresario y las personas u órganos con responsabilidades en materia de prevención serán informados de las conclusiones que se deriven de los reconocimientos efectuados en relación con la aptitud del trabajador para el desempeño del puesto de trabajo o con la necesidad de introducir o mejorar las medidas de protección y prevención». Solo se transmiten conclusiones de aptitud, nunca datos clínicos."
+  },
+  {
+    p: "Según el artículo 22.5 de la LPRL, ¿puede el derecho a la vigilancia de la salud prolongarse más allá de la finalización de la relación laboral?",
+    ops: [
+      "No, el derecho se extingue automáticamente con la finalización del contrato de trabajo",
+      "Sí, en los supuestos en que la naturaleza de los riesgos inherentes al trabajo lo haga necesario, en los términos que reglamentariamente se determinen",
+      "Sí, pero únicamente durante los seis meses siguientes a la extinción del contrato",
+      "Solo se prolonga si el trabajador ha sufrido un accidente de trabajo durante la relación laboral"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.5 LPRL establece que «en los supuestos en que la naturaleza de los riesgos inherentes al trabajo lo haga necesario, el derecho de los trabajadores a la vigilancia periódica de su estado de salud deberá ser prolongado más allá de la finalización de la relación laboral, en los términos que reglamentariamente se determinen». Es relevante en casos de exposición a agentes con efectos diferidos (p.ej. amianto)."
+  },
+  {
+    p: "¿Por qué tipo de personal deben llevarse a cabo las medidas de vigilancia y control de la salud, según el artículo 22.6 de la LPRL?",
+    ops: [
+      "Por cualquier facultativo colegiado, sin necesidad de especialización adicional",
+      "Por personal sanitario con competencia técnica, formación y capacidad acreditada",
+      "Por el propio servicio de recursos humanos de la empresa, con apoyo médico ocasional",
+      "Por la Mutua de Accidentes de Trabajo, en todo caso y sin excepción"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 22.6 LPRL establece que «las medidas de vigilancia y control de la salud de los trabajadores se llevarán a cabo por personal sanitario con competencia técnica, formación y capacidad acreditada». Se exige cualificación específica, no basta cualquier titulación sanitaria genérica."
+  },
+  {
+    p: "El artículo 23.1 de la LPRL enumera la documentación que el empresario debe elaborar y conservar a disposición de la autoridad laboral. ¿Cuál de las siguientes NO figura en dicha enumeración?",
+    ops: [
+      "El plan de prevención de riesgos laborales",
+      "La evaluación de los riesgos para la seguridad y la salud en el trabajo",
+      "La nómina mensual de todos los trabajadores de la empresa",
+      "La relación de accidentes de trabajo y enfermedades profesionales que hayan causado incapacidad laboral superior a un día"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El art. 23.1 LPRL enumera cinco documentos: a) plan de prevención de riesgos laborales; b) evaluación de riesgos, incluidos los controles periódicos; c) planificación de la actividad preventiva; d) práctica de los controles del estado de salud y sus conclusiones; e) relación de accidentes de trabajo y enfermedades profesionales con incapacidad superior a un día. La nómina de los trabajadores no forma parte de esta documentación preventiva."
+  },
+  {
+    p: "¿Qué debe hacer la empresa con la documentación preventiva del artículo 23.1 de la LPRL en el momento de cesar su actividad, según el artículo 23.2?",
+    ops: [
+      "Destruirla, por motivos de protección de datos de los trabajadores",
+      "Remitirla a la autoridad laboral",
+      "Conservarla en sus archivos privados durante un período indefinido",
+      "Entregarla únicamente a los representantes legales de los trabajadores"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 23.2 LPRL establece que «en el momento de cesación de su actividad, las empresas deberán remitir a la autoridad laboral la documentación señalada en el apartado anterior». Esto garantiza la conservación de la documentación preventiva más allá de la vida de la empresa."
+  },
+  {
+    p: "Según el artículo 23.3 de la LPRL, ¿qué obligación específica tiene el empresario respecto a los daños para la salud producidos en el desarrollo del trabajo?",
+    ops: [
+      "Comunicarlo verbalmente a la Inspección de Trabajo en un plazo de 30 días",
+      "Notificar por escrito a la autoridad laboral los daños para la salud de los trabajadores a su servicio que se hubieran producido con motivo del desarrollo de su trabajo, conforme al procedimiento reglamentario",
+      "Únicamente informar a la Mutua de Accidentes de Trabajo correspondiente",
+      "Comunicarlo solo si el daño ha causado el fallecimiento o una incapacidad permanente del trabajador"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 23.3 LPRL establece que «el empresario estará obligado a notificar por escrito a la autoridad laboral los daños para la salud de los trabajadores a su servicio que se hubieran producido con motivo del desarrollo de su trabajo, conforme al procedimiento que se determine reglamentariamente». Es una obligación de notificación formal y escrita."
+  },
+  {
+    p: "El artículo 24.1 de la LPRL regula la coordinación de actividades empresariales. ¿Cuándo se activa este deber de cooperación?",
+    ops: [
+      "Únicamente cuando una de las empresas implicadas tenga más de 50 trabajadores",
+      "Cuando en un mismo centro de trabajo desarrollen actividades trabajadores de dos o más empresas",
+      "Solo en el sector de la construcción, por su especial peligrosidad",
+      "Exclusivamente cuando exista relación de subcontratación entre las empresas implicadas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 24.1 LPRL establece que «cuando en un mismo centro de trabajo desarrollen actividades trabajadores de dos o más empresas, éstas deberán cooperar en la aplicación de la normativa sobre prevención de riesgos laborales», estableciendo los medios de coordinación necesarios en cuanto a la protección y prevención de riesgos y la información a sus respectivos trabajadores."
+  },
+  {
+    p: "Según el artículo 24.2 de la LPRL, ¿qué obligación específica tiene el empresario titular del centro de trabajo respecto a otros empresarios que desarrollen actividades en él?",
+    ops: [
+      "Asumir directamente la dirección de la actividad preventiva de las empresas concurrentes",
+      "Adoptar las medidas necesarias para que dichos empresarios reciban la información e instrucciones adecuadas sobre los riesgos existentes, las medidas de protección y prevención y las medidas de emergencia, para su traslado a sus respectivos trabajadores",
+      "Contratar un seguro de responsabilidad civil colectivo que cubra a todas las empresas concurrentes",
+      "Exigir a las demás empresas la presentación de su plan de prevención antes de iniciar la actividad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 24.2 LPRL establece que «el empresario titular del centro de trabajo adoptará las medidas necesarias para que aquellos otros empresarios que desarrollen actividades en su centro de trabajo reciban la información y las instrucciones adecuadas, en relación con los riesgos existentes en el centro de trabajo y con las medidas de protección y prevención correspondientes, así como sobre las medidas de emergencia a aplicar, para su traslado a sus respectivos trabajadores»."
+  },
+  {
+    p: "El artículo 24.3 de la LPRL regula la subcontratación de obras o servicios. ¿Qué deber tiene la empresa principal sobre sus contratistas y subcontratistas?",
+    ops: [
+      "Ninguno, la responsabilidad recae íntegramente en cada contratista o subcontratista por separado",
+      "Vigilar el cumplimiento por dichos contratistas y subcontratistas de la normativa de prevención de riesgos laborales",
+      "Asumir directamente la formación preventiva de todos los trabajadores subcontratados",
+      "Garantizar exclusivamente el pago puntual de las facturas emitidas por los subcontratistas"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 24.3 LPRL establece que «las empresas que contraten o subcontraten con otras la realización de obras o servicios correspondientes a la propia actividad de aquéllas y que se desarrollen en sus propios centros de trabajo deberán vigilar el cumplimiento por dichos contratistas y subcontratistas de la normativa de prevención de riesgos laborales»."
+  },
+  {
+    p: "¿Se extienden los deberes de cooperación e información del artículo 24 de la LPRL a los trabajadores autónomos que desarrollen actividades en un centro de trabajo, según el artículo 24.5?",
+    ops: [
+      "No, los trabajadores autónomos quedan excluidos del ámbito de este artículo",
+      "Sí, los deberes de cooperación y de información e instrucción recogidos en los apartados 1 y 2 serán de aplicación respecto de los trabajadores autónomos que desarrollen actividades en dichos centros",
+      "Solo se les aplica el deber de información, no el de cooperación",
+      "Únicamente si el trabajador autónomo así lo solicita expresamente por escrito"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 24.5 LPRL establece que «los deberes de cooperación y de información e instrucción recogidos en los apartados 1 y 2 serán de aplicación respecto de los trabajadores autónomos que desarrollen actividades en dichos centros de trabajo». Se extiende así la protección preventiva a los autónomos presentes en centros de trabajo compartidos."
+  },
+  {
+    p: "El artículo 25.1 de la LPRL protege a los trabajadores especialmente sensibles a determinados riesgos. ¿Qué debe garantizar el empresario respecto a estos trabajadores?",
+    ops: [
+      "Su contratación preferente frente a otros candidatos en igualdad de condiciones",
+      "Su protección específica, teniendo en cuenta sus características en las evaluaciones de riesgos y adoptando, en función de éstas, las medidas preventivas y de protección necesarias",
+      "Su exención total de cualquier tipo de evaluación médica periódica",
+      "Su incorporación automática a puestos de trabajo de menor responsabilidad"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 25.1 LPRL establece que el empresario «garantizará de manera específica la protección de los trabajadores que, por sus propias características personales o estado biológico conocido, incluidos aquellos que tengan reconocida la situación de discapacidad física, psíquica o sensorial, sean especialmente sensibles a los riesgos derivados del trabajo», debiendo tener en cuenta dichos aspectos en las evaluaciones de riesgos."
+  },
+  {
+    p: "¿En qué puestos de trabajo no podrán ser empleados los trabajadores especialmente sensibles, según el artículo 25.1 in fine de la LPRL?",
+    ops: [
+      "En cualquier puesto que implique manejo de maquinaria pesada, sin excepción",
+      "En aquellos puestos donde, a causa de sus características personales, estado biológico o discapacidad, puedan ellos, otros trabajadores u otras personas relacionadas con la empresa ponerse en situación de peligro, o cuando se encuentren en situaciones transitorias que no respondan a las exigencias psicofísicas del puesto",
+      "En ningún puesto de la empresa, salvo autorización expresa de la Inspección de Trabajo",
+      "Solo en puestos de atención al público, por motivos de imagen corporativa"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 25.1 in fine LPRL establece que estos trabajadores «no serán empleados en aquellos puestos de trabajo en los que, a causa de sus características personales, estado biológico o por su discapacidad física, psíquica o sensorial debidamente reconocida, puedan ellos, los demás trabajadores u otras personas relacionadas con la empresa ponerse en situación de peligro o, en general, cuando se encuentren manifiestamente en estados o situaciones transitorias que no respondan a las exigencias psicofísicas de los respectivos puestos de trabajo»."
+  },
+  {
+    p: "Según el artículo 25.2 de la LPRL, ¿qué factores de riesgo debe tener en cuenta el empresario respecto a la función de procreación de los trabajadores y trabajadoras?",
+    ops: [
+      "Únicamente los relacionados con la exposición a radiaciones ionizantes",
+      "La exposición a agentes físicos, químicos y biológicos que puedan ejercer efectos mutagénicos o de toxicidad para la procreación, tanto en fertilidad como en desarrollo de la descendencia",
+      "Solo los riesgos psicosociales derivados del estrés laboral",
+      "Exclusivamente los riesgos ergonómicos por sobreesfuerzo físico"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 25.2 LPRL establece que el empresario «deberá tener en cuenta en las evaluaciones los factores de riesgo que puedan incidir en la función de procreación de los trabajadores y trabajadoras, en particular por la exposición a agentes físicos, químicos y biológicos que puedan ejercer efectos mutagénicos o de toxicidad para la procreación, tanto en los aspectos de la fertilidad, como del desarrollo de la descendencia»."
+  },
+  {
+    p: "El artículo 26.1 de la LPRL regula la protección de la maternidad. ¿Qué debe comprender la evaluación de riesgos respecto a trabajadoras embarazadas o en parto reciente?",
+    ops: [
+      "Solo los riesgos relacionados con esfuerzos físicos intensos en el puesto de trabajo",
+      "La determinación de la naturaleza, el grado y la duración de la exposición a agentes, procedimientos o condiciones de trabajo que puedan influir negativamente en la salud de las trabajadoras o del feto",
+      "Únicamente los riesgos derivados de sustancias químicas clasificadas como cancerígenas",
+      "Solo aquellos riesgos que hayan sido previamente comunicados por escrito por la trabajadora"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.1 LPRL establece que la evaluación de riesgos «deberá comprender la determinación de la naturaleza, el grado y la duración de la exposición de las trabajadoras en situación de embarazo o parto reciente a agentes, procedimientos o condiciones de trabajo que puedan influir negativamente en la salud de las trabajadoras o del feto, en cualquier actividad susceptible de presentar un riesgo específico»."
+  },
+  {
+    p: "Si la evaluación revela riesgo para la salud de la trabajadora embarazada (art. 26.1 LPRL), ¿qué medida debe adoptar prioritariamente el empresario?",
+    ops: [
+      "Suspender automáticamente el contrato de trabajo de la trabajadora afectada",
+      "Adaptar las condiciones o el tiempo de trabajo de la trabajadora afectada, incluyendo, cuando resulte necesario, la no realización de trabajo nocturno o a turnos",
+      "Trasladar a la trabajadora a otro centro de trabajo distinto, sin posibilidad de negociación",
+      "Reducir su salario proporcionalmente a la reducción de su jornada laboral"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.1 LPRL establece que, ante riesgo revelado por la evaluación, «el empresario adoptará las medidas necesarias para evitar la exposición a dicho riesgo, a través de una adaptación de las condiciones o del tiempo de trabajo de la trabajadora afectada. Dichas medidas incluirán, cuando resulte necesario, la no realización de trabajo nocturno o de trabajo a turnos»."
+  },
+  {
+    p: "Cuando la adaptación de condiciones no sea posible o resulte insuficiente (art. 26.2 LPRL), ¿qué debe hacer el empresario respecto a la trabajadora embarazada?",
+    ops: [
+      "Despedirla con indemnización, al no poder garantizar su seguridad en el puesto",
+      "Determinar, previa consulta con los representantes de los trabajadores, la relación de puestos exentos de riesgos, y la trabajadora deberá desempeñar un puesto diferente y compatible con su estado",
+      "Suspender directamente el contrato sin posibilidad de cambio de puesto previo",
+      "Reducir su jornada laboral a la mitad, manteniendo el mismo puesto de trabajo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.2 LPRL establece que, certificado el riesgo por los Servicios Médicos correspondientes, «ésta deberá desempeñar un puesto de trabajo o función diferente y compatible con su estado», y que «el empresario deberá determinar, previa consulta con los representantes de los trabajadores, la relación de los puestos de trabajo exentos de riesgos a estos efectos»."
+  },
+  {
+    p: "Si no existiese puesto de trabajo o función compatible para la trabajadora embarazada (art. 26.2 in fine LPRL), ¿qué ocurre con sus retribuciones si es destinada a un puesto de categoría inferior?",
+    ops: [
+      "Pasa a percibir el salario correspondiente al nuevo puesto, inferior al original",
+      "Conservará el derecho al conjunto de retribuciones de su puesto de origen",
+      "Recibe un complemento del 50% sobre el salario del nuevo puesto",
+      "Deja de percibir retribución hasta su reincorporación al puesto original"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.2 in fine LPRL establece que, en el supuesto de que no existiese puesto compatible, «la trabajadora podrá ser destinada a un puesto no correspondiente a su grupo o categoría equivalente, si bien conservará el derecho al conjunto de retribuciones de su puesto de origen». Es una garantía económica que evita perjuicio salarial por razón del embarazo."
+  },
+  {
+    p: "Según el artículo 26.3 de la LPRL, ¿cuándo procede declarar la suspensión del contrato por riesgo durante el embarazo?",
+    ops: [
+      "Automáticamente desde el inicio del embarazo, sin necesidad de ningún trámite previo",
+      "Si el cambio de puesto no resultara técnica u objetivamente posible, o no pueda razonablemente exigirse por motivos justificados, mientras persista la imposibilidad de reincorporación",
+      "Únicamente en el último mes de gestación, por motivos de seguridad reforzada",
+      "Solo cuando lo solicite expresamente la trabajadora, sin necesidad de certificación médica"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.3 LPRL establece que «si dicho cambio de puesto no resultara técnica u objetivamente posible, o no pueda razonablemente exigirse por motivos justificados, podrá declararse el paso de la trabajadora afectada a la situación de suspensión del contrato por riesgo durante el embarazo... durante el período necesario para la protección de su seguridad o de su salud y mientras persista la imposibilidad de reincorporarse a su puesto anterior o a otro puesto compatible»."
+  },
+  {
+    p: "¿Se extiende la protección de la maternidad regulada en el artículo 26 de la LPRL al período de lactancia natural?",
+    ops: [
+      "No, la protección finaliza con el parto, sin extensión posterior",
+      "Sí, lo dispuesto en los números 1 y 2 será también de aplicación durante el período de lactancia natural, si las condiciones de trabajo pudieran influir negativamente en la salud de la mujer o del hijo, pudiendo declararse la suspensión del contrato por riesgo durante la lactancia de hijos menores de nueve meses",
+      "Sí, pero únicamente durante los tres primeros meses tras el nacimiento",
+      "Solo se extiende a la lactancia artificial, no a la lactancia natural"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.4 LPRL establece que lo dispuesto en los números 1 y 2 «será también de aplicación durante el período de lactancia natural, si las condiciones de trabajo pudieran influir negativamente en la salud de la mujer o del hijo y así lo certifiquen los Servicios Médicos», pudiendo declararse la suspensión del contrato «por riesgo durante la lactancia natural de hijos menores de nueve meses»."
+  },
+  {
+    p: "Según el artículo 26.5 de la LPRL, ¿tienen las trabajadoras embarazadas derecho a ausentarse del trabajo para exámenes prenatales?",
+    ops: [
+      "Sí, pero sin derecho a remuneración durante dicha ausencia",
+      "Sí, con derecho a remuneración, previo aviso al empresario y justificación de la necesidad de su realización dentro de la jornada de trabajo",
+      "No, deben realizar dichos exámenes fuera de su horario laboral en todo caso",
+      "Solo tienen este derecho a partir del séptimo mes de gestación"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 26.5 LPRL establece que «las trabajadoras embarazadas tendrán derecho a ausentarse del trabajo, con derecho a remuneración, para la realización de exámenes prenatales y técnicas de preparación al parto, previo aviso al empresario y justificación de la necesidad de su realización dentro de la jornada de trabajo»."
+  },
+  {
+    p: "El artículo 27.1 de la LPRL regula la protección de los menores. ¿Qué debe hacer el empresario antes de la incorporación al trabajo de jóvenes menores de dieciocho años?",
+    ops: [
+      "Solicitar autorización previa del Ministerio de Trabajo en todos los casos",
+      "Efectuar una evaluación de los puestos de trabajo a desempeñar por los mismos, a fin de determinar la naturaleza, el grado y la duración de su exposición a riesgos",
+      "Contratar obligatoriamente un seguro de vida específico para el trabajador menor",
+      "Limitar su jornada laboral a un máximo de cuatro horas diarias en todo caso"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 27.1 LPRL establece que, antes de la incorporación al trabajo de menores de 18 años, y antes de cualquier modificación importante de sus condiciones, «el empresario deberá efectuar una evaluación de los puestos de trabajo a desempeñar por los mismos, a fin de determinar la naturaleza, el grado y la duración de su exposición, en cualquier actividad susceptible de presentar un riesgo específico»."
+  },
+  {
+    p: "¿Qué factores debe tener especialmente en cuenta la evaluación de riesgos de los trabajadores menores, según el artículo 27.1 de la LPRL?",
+    ops: [
+      "Únicamente su falta de experiencia laboral previa",
+      "Los riesgos específicos para la seguridad, la salud y el desarrollo de los jóvenes derivados de su falta de experiencia, de su inmadurez para evaluar los riesgos existentes o potenciales y de su desarrollo todavía incompleto",
+      "Solo el nivel de estudios alcanzado por el menor en el momento de su contratación",
+      "Exclusivamente la opinión de los padres o tutores sobre la idoneidad del puesto"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 27.1 LPRL establece que la evaluación «tendrá especialmente en cuenta los riesgos específicos para la seguridad, la salud y el desarrollo de los jóvenes derivados de su falta de experiencia, de su inmadurez para evaluar los riesgos existentes o potenciales y de su desarrollo todavía incompleto»."
+  },
+  {
+    p: "¿A quién debe informar el empresario, además de al propio joven trabajador, sobre los riesgos y medidas de protección adoptadas, según el artículo 27.1 in fine de la LPRL?",
+    ops: [
+      "Al sindicato mayoritario del sector de actividad",
+      "A sus padres o tutores que hayan intervenido en la contratación",
+      "Al Ministerio Fiscal, en todo caso, por tratarse de un menor de edad",
+      "A la Inspección de Trabajo, mediante comunicación previa obligatoria"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 27.1 in fine LPRL establece que «el empresario informará a dichos jóvenes y a sus padres o tutores que hayan intervenido en la contratación... de los posibles riesgos y de todas las medidas adoptadas para la protección de su seguridad y salud». Es una garantía adicional propia de la minoría de edad del trabajador."
+  },
+  {
+    p: "Según el artículo 27.2 de la LPRL, ¿quién establece las limitaciones a la contratación de menores de dieciocho años en trabajos de riesgo específico?",
+    ops: [
+      "El Gobierno",
+      "Cada Comunidad Autónoma, en su ámbito competencial",
+      "El Comité de Seguridad y Salud de cada empresa",
+      "La Inspección de Trabajo y Seguridad Social, caso por caso"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 27.2 LPRL establece que, «teniendo en cuenta los factores anteriormente señalados, el Gobierno establecerá las limitaciones a la contratación de jóvenes menores de dieciocho años en trabajos que presenten riesgos específicos». Es una habilitación reglamentaria al Gobierno central."
+  },
+  {
+    p: "El artículo 28.1 de la LPRL regula a los trabajadores con relaciones temporales o de duración determinada. ¿Qué nivel de protección deben disfrutar?",
+    ops: [
+      "Un nivel de protección inferior, proporcional a la duración de su contrato",
+      "El mismo nivel de protección en materia de seguridad y salud que los restantes trabajadores de la empresa en la que prestan sus servicios",
+      "Un nivel de protección reforzado, superior al de los trabajadores fijos",
+      "El nivel de protección que determine el convenio colectivo de la empresa de trabajo temporal"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 28.1 LPRL establece que «los trabajadores con relaciones de trabajo temporales o de duración determinada, así como los contratados por empresas de trabajo temporal, deberán disfrutar del mismo nivel de protección en materia de seguridad y salud que los restantes trabajadores de la empresa en la que prestan sus servicios», sin que la temporalidad justifique diferencia de trato alguna."
+  },
+  {
+    p: "En las relaciones de trabajo a través de empresas de trabajo temporal (ETT), ¿quién es responsable de las condiciones de ejecución del trabajo en materia de seguridad y salud, según el artículo 28.5 de la LPRL?",
+    ops: [
+      "La empresa de trabajo temporal, en todo caso, con independencia de dónde se preste el servicio",
+      "La empresa usuaria",
+      "Ambas empresas de forma solidaria e indiferenciada en todos los aspectos",
+      "El trabajador, que debe velar por su propia seguridad en el puesto cedido"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 28.5 LPRL establece que «la empresa usuaria será responsable de las condiciones de ejecución del trabajo en todo lo relacionado con la protección de la seguridad y la salud de los trabajadores», así como del cumplimiento de las obligaciones de información. En cambio, la ETT es responsable de la formación y vigilancia de la salud."
+  },
+  {
+    p: "¿Quién es responsable, según el artículo 28.5 de la LPRL, del cumplimiento de las obligaciones en materia de formación y vigilancia de la salud de los trabajadores cedidos por una ETT?",
+    ops: [
+      "La empresa usuaria, exclusivamente",
+      "La empresa de trabajo temporal",
+      "Ambas empresas de forma indistinta, a elección del trabajador",
+      "El servicio público de empleo correspondiente"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 28.5 LPRL establece que «la empresa de trabajo temporal será responsable del cumplimiento de las obligaciones en materia de formación y vigilancia de la salud que se establecen en los apartados 2 y 3 de este artículo». Existe así un reparto de responsabilidades: la usuaria responde de las condiciones de ejecución; la ETT, de formación y vigilancia de la salud."
+  },
+  {
+    p: "El artículo 29.1 de la LPRL establece una obligación general de los trabajadores en materia de prevención. ¿Cuál es?",
+    ops: [
+      "Velar, según sus posibilidades y mediante el cumplimiento de las medidas de prevención adoptadas en cada caso, por su propia seguridad y salud en el trabajo y por la de aquellas otras personas a las que pueda afectar su actividad profesional",
+      "Diseñar e implantar el plan de prevención de riesgos laborales de la empresa",
+      "Sufragar el coste de los equipos de protección individual que necesiten para el desempeño de sus funciones",
+      "Realizar inspecciones periódicas de los equipos de trabajo utilizados por otros compañeros"
+    ],
+    c: 0,
+    exp: "<strong>Respuesta correcta: A.</strong> El art. 29.1 LPRL establece que «corresponde a cada trabajador velar, según sus posibilidades y mediante el cumplimiento de las medidas de prevención que en cada caso sean adoptadas, por su propia seguridad y salud en el trabajo y por la de aquellas otras personas a las que pueda afectar su actividad profesional, a causa de sus actos y omisiones en el trabajo, de conformidad con su formación y las instrucciones del empresario»."
+  },
+  {
+    p: "¿Cuál de las siguientes obligaciones de los trabajadores NO figura entre las enumeradas en el artículo 29.2 de la LPRL?",
+    ops: [
+      "Usar adecuadamente las máquinas, aparatos, herramientas y sustancias peligrosas con las que desarrollen su actividad",
+      "Utilizar correctamente los medios y equipos de protección facilitados por el empresario",
+      "Diseñar y proponer al empresario el plan anual de formación preventiva de la empresa",
+      "Informar de inmediato a su superior jerárquico sobre cualquier situación que entrañe, por motivos razonables, un riesgo para la seguridad y la salud"
+    ],
+    c: 2,
+    exp: "<strong>Respuesta correcta: C.</strong> El art. 29.2 LPRL enumera seis obligaciones del trabajador: usar adecuadamente equipos y sustancias; utilizar correctamente los EPI; no poner fuera de funcionamiento los dispositivos de seguridad; informar de inmediato sobre situaciones de riesgo; contribuir al cumplimiento de obligaciones de la autoridad competente; y cooperar con el empresario en materia de seguridad. Diseñar el plan de formación es responsabilidad empresarial, no obligación del trabajador."
+  },
+  {
+    p: "Según el artículo 29.3 de la LPRL, ¿qué consideración tiene el incumplimiento por los trabajadores de sus obligaciones en materia de prevención?",
+    ops: [
+      "No tiene ninguna consecuencia jurídica, al ser un deber meramente ético",
+      "Tendrá la consideración de incumplimiento laboral a los efectos del art. 58.1 del Estatuto de los Trabajadores, o de falta conforme al régimen disciplinario de funcionarios o personal estatutario",
+      "Da lugar exclusivamente a responsabilidad civil frente a terceros perjudicados",
+      "Solo genera responsabilidad si se ha producido un accidente de trabajo efectivo"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 29.3 LPRL establece que el incumplimiento de las obligaciones preventivas por los trabajadores «tendrá la consideración de incumplimiento laboral a los efectos previstos en el artículo 58.1 del Estatuto de los Trabajadores o de falta, en su caso, conforme a lo establecido en la correspondiente normativa sobre régimen disciplinario de los funcionarios públicos o del personal estatutario al servicio de las Administraciones públicas». Es aplicable también a los socios de cooperativas de trabajo."
+  },
+
+  /* ══ PREGUNTAS DE SÍNTESIS Y DISTINCIÓN ══ */
+  {
+    p: "¿Cuál es la diferencia entre el derecho individual a interrumpir la actividad del artículo 21.2 de la LPRL y la paralización colectiva del artículo 21.3?",
+    ops: [
+      "No hay diferencia: ambas requieren siempre acuerdo previo de los representantes de los trabajadores",
+      "El art. 21.2 es un derecho individual del trabajador basado en su propia apreciación del riesgo; el art. 21.3 es una decisión colectiva de los representantes legales, adoptada por mayoría, ante la inacción del empresario, sujeta a ratificación o anulación por la autoridad laboral en 24 horas",
+      "El art. 21.2 solo se aplica al sector público; el art. 21.3 únicamente al sector privado",
+      "El art. 21.3 no requiere comunicación a ninguna autoridad, a diferencia del art. 21.2"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 21.2 LPRL reconoce al trabajador individualmente el derecho a interrumpir su actividad cuando «considere» que entraña riesgo grave e inminente para su vida o salud. El art. 21.3 regula una paralización colectiva, decidida por mayoría de los representantes legales (o Delegados de Prevención si no es posible reunir el órgano de representación), que debe comunicarse de inmediato a la empresa y a la autoridad laboral, la cual debe pronunciarse en 24 horas."
+  },
+  {
+    p: "¿En qué se diferencian las exclusiones del ámbito de aplicación de la LPRL previstas en el artículo 3.2 respecto a los centros militares y penitenciarios del artículo 3.3?",
+    ops: [
+      "No hay diferencia: ambos supuestos están totalmente excluidos de la Ley",
+      "El art. 3.2 excluye determinadas actividades de funciones públicas (policía, protección civil, FFAA) cuando sus particularidades lo impidan, limitándose la Ley a «inspirar» su normativa específica; el art. 3.3 declara aplicable la Ley a centros militares y penitenciarios, con las particularidades o adaptaciones que correspondan",
+      "El art. 3.2 se refiere a personal laboral; el art. 3.3, exclusivamente a personal funcionario",
+      "Ambos artículos regulan exactamente el mismo supuesto de exclusión, con redacción distinta"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 3.2 LPRL excluye del ámbito de la Ley ciertas actividades de funciones públicas (policía/seguridad/resguardo aduanero, protección civil/peritaje forense en catástrofes, FFAA y actividad militar de la Guardia Civil), limitándose la Ley a «inspirar» la normativa específica. El art. 3.3, en cambio, declara expresamente aplicable la Ley a los centros y establecimientos militares (con particularidades de su normativa específica) y exige adaptar a la Ley aquellas actividades penitenciarias que justifiquen regulación especial. Son regímenes distintos: exclusión parcial inspiradora vs. aplicación con adaptaciones."
+  },
+  {
+    p: "¿Cuál es la diferencia entre «riesgo laboral» (art. 4.2º LPRL) y «riesgo laboral grave e inminente» (art. 4.4º LPRL)?",
+    ops: [
+      "No hay diferencia conceptual entre ambos términos, se usan como sinónimos en la Ley",
+      "El riesgo laboral es la posibilidad genérica de que un trabajador sufra un daño derivado del trabajo, valorada por probabilidad y severidad; el riesgo grave e inminente añade dos requisitos adicionales: probabilidad racional de materializarse en un futuro inmediato y posibilidad de daño grave para la salud",
+      "El riesgo laboral se refiere solo a accidentes; el riesgo grave e inminente, solo a enfermedades profesionales",
+      "El riesgo grave e inminente es una categoría creada por vía reglamentaria, no por la propia Ley"
+    ],
+    c: 1,
+    exp: "<strong>Respuesta correcta: B.</strong> El art. 4.2º LPRL define «riesgo laboral» de forma genérica como la posibilidad de daño derivado del trabajo, valorado conjuntamente por probabilidad y severidad. El art. 4.4º LPRL define una categoría cualificada, el «riesgo grave e inminente», que exige dos elementos adicionales: que resulte probable racionalmente que se materialice en un futuro inmediato, y que pueda suponer un daño grave para la salud. Esta categoría cualificada es la que activa derechos especiales como la paralización de actividad del art. 21."
+  }
+];
+
+/* ── LÓGICA ── */
+let orden = [], respondidas = 0, aciertos = 0, errores = 0;
+const TOTAL = BANCO.length;
+
+document.getElementById('totalLabel').textContent = '📋 ' + TOTAL + ' preguntas';
+document.getElementById('barraNum').textContent = '0 / ' + TOTAL;
+
+function mezclar(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function actualizarBarra() {
+  document.getElementById('barraFill').style.width = ((respondidas / TOTAL) * 100) + '%';
+  document.getElementById('barraNum').textContent = respondidas + ' / ' + TOTAL;
+  document.getElementById('scoreOk').textContent = '✓ ' + aciertos;
+  document.getElementById('scoreKo').textContent = '✗ ' + errores;
+}
+
+function construirPreguntas() {
+  orden = mezclar([...Array(TOTAL).keys()]);
+  const main = document.getElementById('mainContent');
+  main.innerHTML = '';
+  const letras = ['A', 'B', 'C', 'D'];
+
+  orden.forEach((idx, pos) => {
+    const q = BANCO[idx];
+    const opsOrden = mezclar([0, 1, 2, 3]);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + pos;
+
+    const numDiv = document.createElement('div');
+    numDiv.className = 'card-num';
+    numDiv.textContent = 'Pregunta ' + (pos + 1);
+
+    const pregDiv = document.createElement('div');
+    pregDiv.className = 'card-pregunta';
+    pregDiv.textContent = q.p;
+
+    const opcionesDiv = document.createElement('div');
+    opcionesDiv.className = 'opciones';
+
+    opsOrden.forEach((opIdx, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcion';
+      btn.dataset.correcto = (opIdx === q.c) ? '1' : '0';
+      btn.dataset.pos = pos;
+      btn.innerHTML = '<span class="letra">' + letras[i] + '</span><span>' + q.ops[opIdx] + '</span>';
+      btn.addEventListener('click', onOpcionClick);
+      opcionesDiv.appendChild(btn);
+    });
+
+    const expDiv = document.createElement('div');
+    expDiv.className = 'explicacion';
+    expDiv.id = 'exp-' + pos;
+    expDiv.innerHTML = q.exp;
+
+    card.appendChild(numDiv);
+    card.appendChild(pregDiv);
+    card.appendChild(opcionesDiv);
+    card.appendChild(expDiv);
+    main.appendChild(card);
+  });
+
+  const res = document.createElement('div');
+  res.className = 'resultado';
+  res.id = 'resultado';
+  res.innerHTML = `
+    <div class="resultado-eyebrow">Resultado final</div>
+    <h2>Test completado</h2>
+    <div class="resultado-nota"><span id="rNota">-</span><span style="font-size:1.5rem;color:var(--texto-suave)">/10</span></div>
+    <div id="rBadge" class="calif-badge"></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="rOk" style="color:var(--verde)">-</div><div class="stat-lab">Correctas</div></div>
+      <div class="stat"><div class="stat-num" id="rKo" style="color:var(--rojo)">-</div><div class="stat-lab">Erróneas</div></div>
+      <div class="stat"><div class="stat-num" id="rPct">-</div><div class="stat-lab">% Acierto</div></div>
+    </div>
+    <p class="resultado-hint">Revisa las explicaciones en cada pregunta para reforzar los conceptos.</p>
+    <button class="btn btn-naranja" onclick="reiniciar()">🔄 Nuevo intento</button>
+  `;
+  main.appendChild(res);
+}
+
+function onOpcionClick(e) {
+  const btn = e.currentTarget;
+  const pos = parseInt(btn.dataset.pos);
+  const card = document.getElementById('card-' + pos);
+  card.querySelectorAll('.opcion').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.correcto === '1') b.classList.add('correcta');
+    else if (b === btn) b.classList.add('incorrecta');
+  });
+  document.getElementById('exp-' + pos).classList.add('visible');
+  if (btn.dataset.correcto === '1') aciertos++; else errores++;
+  respondidas++;
+  actualizarBarra();
+  if (respondidas === TOTAL) mostrarResultado();
+}
+
+function mostrarResultado() {
+  const nota = ((aciertos / TOTAL) * 10).toFixed(1);
+  const pct = Math.round((aciertos / TOTAL) * 100);
+  let badge = '', color = '';
+  if (pct >= 90)      { badge = '🏆 Sobresaliente'; color = '#166534'; }
+  else if (pct >= 70) { badge = '✅ Notable';        color = '#1d4ed8'; }
+  else if (pct >= 50) { badge = '⚠️ Aprobado';      color = '#92400e'; }
+  else                { badge = '❌ Suspenso';       color = '#991b1b'; }
+  document.getElementById('rNota').textContent = nota;
+  document.getElementById('rOk').textContent = aciertos;
+  document.getElementById('rKo').textContent = errores;
+  document.getElementById('rPct').textContent = pct + '%';
+  const badgeEl = document.getElementById('rBadge');
+  badgeEl.textContent = badge;
+  badgeEl.style.cssText += `;background:${color}22;color:${color};border:1px solid ${color}44`;
+  const res = document.getElementById('resultado');
+  res.classList.add('visible');
+  setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function reiniciar() {
+  respondidas = 0; aciertos = 0; errores = 0;
+  actualizarBarra();
+  construirPreguntas();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+construirPreguntas();
+</script>
+</body>
+</html>
